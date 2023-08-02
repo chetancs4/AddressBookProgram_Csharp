@@ -1,6 +1,6 @@
 ﻿namespace AddressBookProgram
 {
-    public class Contact
+    public class ContactPerson
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -16,6 +16,7 @@
             return $"{FirstName} {LastName}\nAddress: {Address}, {City}, {State} {Zip}\nPhone: {PhoneNumber}\nEmail: {Email}";
         }
     }
+
 }
 
 

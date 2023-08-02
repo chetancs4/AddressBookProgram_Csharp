@@ -3,11 +3,11 @@
 
     public class Program
     {
-        static List<Contact> contacts = new List<Contact>();
-
         public static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Address Book!");
+
+            AddressBook addressBook = new AddressBook();
 
             bool isRunning = true;
 
@@ -23,10 +23,10 @@
                 switch (choice)
                 {
                     case 1:
-                        AddContact();
+                        AddContact(addressBook);
                         break;
                     case 2:
-                        DisplayContacts();
+                        addressBook.DisplayContacts();
                         break;
                     case 3:
                         isRunning = false;
@@ -50,7 +50,7 @@
             return choice;
         }
 
-        static void AddContact()
+        static void AddContact(AddressBook addressBook)
         {
             Console.WriteLine("\nAdding a new contact:");
             Console.Write("Enter First Name: ");
@@ -70,7 +70,7 @@
             Console.Write("Enter Email: ");
             string email = Console.ReadLine();
 
-            Contact newContact = new Contact
+            ContactPerson newContact = new ContactPerson
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -82,26 +82,11 @@
                 Email = email
             };
 
-            contacts.Add(newContact);
+            addressBook.AddContact(newContact);
             Console.WriteLine("Contact added successfully!");
         }
-
-        static void DisplayContacts()
-        {
-            if (contacts.Count == 0)
-            {
-                Console.WriteLine("No contacts found.");
-            }
-            else
-            {
-                Console.WriteLine("\nAll Contacts:");
-                foreach (Contact contact in contacts)
-                {
-                    Console.WriteLine(contact.ToString());
-                }
-            }
-        }
     }
+
 }
 
 
