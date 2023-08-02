@@ -1,9 +1,16 @@
-﻿namespace AddressBookProgram
+﻿using System.Xml.Linq;
+
+namespace AddressBookProgram
 {
     public class AddressBook
     {
         public List<ContactPerson> contacts = new List<ContactPerson>();
 
+        public string Name { get; private set; }
+        public AddressBook(string name)
+        {
+            Name = name;
+        }
         public void AddContact(ContactPerson contact)
         {
             contacts.Add(contact);

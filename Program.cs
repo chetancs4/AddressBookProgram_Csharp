@@ -1,13 +1,12 @@
 ﻿namespace AddressBookProgram
 {
-
     public class Program
     {
+        static AddressBookManager addressBookManager = new AddressBookManager();
+
         public static void Main(string[] args)
         {
             Console.WriteLine("Welcome to the Address Book!");
-
-            AddressBook addressBook = new AddressBook();
 
             bool isRunning = true;
 
@@ -19,28 +18,36 @@
                 Console.WriteLine("3. Delete Contact");
                 Console.WriteLine("4. Display All Contacts");
                 Console.WriteLine("5. Add Multiple Contacts");
-                Console.WriteLine("6. Exit");
+                Console.WriteLine("6. Add New Address Book");
+                Console.WriteLine("7. Select Address Book");
+                Console.WriteLine("8. Exit");
 
                 int choice = GetUserChoice();
 
                 switch (choice)
                 {
                     case 1:
-                        AddContact(addressBook);
+                        AddContact();
                         break;
                     case 2:
-                        EditContact(addressBook);
+                        EditContact();
                         break;
                     case 3:
-                        DeleteContact(addressBook);
+                        DeleteContact();
                         break;
                     case 4:
-                        addressBook.DisplayContacts();
+                        DisplayContacts();
                         break;
                     case 5:
-                        AddMultipleContacts(addressBook);
+                        AddMultipleContacts();
                         break;
                     case 6:
+                        CreateAddressBook();
+                        break;
+                    case 7:
+                        SelectAddressBook();
+                        break;
+                    case 8:
                         isRunning = false;
                         break;
                     default:
@@ -62,9 +69,136 @@
             return choice;
         }
 
-        static void AddContact(AddressBook addressBook)
+        static void AddContact()
         {
-            Console.WriteLine("\nAdding a new contact:");
+            AddressBook addressBook = GetSelectedAddressBook();
+            if (addressBook != null)
+            {
+                ContactPerson newContact = GetContactDetails();
+                addressBook.AddContact(newContact);
+                Console.WriteLine("Contact added successfully!");
+            }
+        }
+
+        static void EditContact()
+        {
+            AddressBook addressBook = GetSelectedAddressBook();
+            if (addressBook != null)
+            {
+                ContactPerson updatedContact = GetContactDetails();
+                Console.WriteLine("\nEnter the contact's name you want to edit:");
+                Console.Write("Enter First Name: ");
+                string firstName = Console.ReadLine();
+                Console.Write("Enter Last Name: ");
+                string lastName = Console.ReadLine();
+
+                if (addressBook.EditContact(firstName, lastName, updatedContact))
+                {
+                    Console.WriteLine("Contact updated successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Contact not found.");
+                }
+            }
+        }
+
+        static void DeleteContact()
+        {
+            AddressBook addressBook = GetSelectedAddressBook();
+            if (addressBook != null)
+            {
+                Console.WriteLine("\nEnter the contact's name you want to delete:");
+                Console.Write("Enter First Name: ");
+                string firstName = Console.ReadLine();
+                Console.Write("Enter Last Name: ");
+                string lastName = Console.ReadLine();
+
+                if (addressBook.DeleteContact(firstName, lastName))
+                {
+                    Console.WriteLine("Contact deleted successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Contact not found.");
+                }
+            }
+        }
+
+        static void DisplayContacts()
+        {
+            AddressBook addressBook = GetSelectedAddressBook();
+            if (addressBook != null)
+            {
+                addressBook.DisplayContacts();
+            }
+        }
+
+        static void AddMultipleContacts()
+        {
+            AddressBook addressBook = GetSelectedAddressBook();
+            if (addressBook != null)
+            {
+                Console.WriteLine("\nAdding multiple contacts:");
+                while (true)
+                {
+                    ContactPerson newContact = GetContactDetails();
+                    addressBook.AddContact(newContact);
+                    Console.WriteLine("Contact added successfully!");
+
+                    Console.Write("Do you want to add another contact? (yes/no): ");
+                    string answer = Console.ReadLine().ToLower();
+                    if (answer != "yes")
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+        static void CreateAddressBook()
+        {
+            Console.Write("Enter the name of the new Address Book: ");
+            string addressBookName = Console.ReadLine();
+            addressBookManager.AddAddressBook(addressBookName);
+        }
+
+        static void SelectAddressBook()
+        {
+            List<string> addressBookNames = addressBookManager.GetAddressBookNames();
+            if (addressBookNames.Count > 0)
+            {
+                Console.WriteLine("\nAvailable Address Books:");
+                foreach (string name in addressBookNames)
+                {
+                    Console.WriteLine(name);
+                }
+
+                Console.Write("Enter the name of the Address Book you want to select: ");
+                string selectedAddressBook = Console.ReadLine();
+                if (addressBookManager.GetAddressBook(selectedAddressBook) != null)
+                {
+                    Console.WriteLine($"Selected Address Book: {selectedAddressBook}");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Address Book name.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Address Books found. Please create a new Address Book first.");
+            }
+        }
+
+        static AddressBook GetSelectedAddressBook()
+        {
+            Console.Write("Enter the name of the Address Book you want to use: ");
+            string selectedAddressBook = Console.ReadLine();
+            return addressBookManager.GetAddressBook(selectedAddressBook);
+        }
+
+        static ContactPerson GetContactDetails()
+        {
             Console.Write("Enter First Name: ");
             string firstName = Console.ReadLine();
             Console.Write("Enter Last Name: ");
@@ -82,7 +216,7 @@
             Console.Write("Enter Email: ");
             string email = Console.ReadLine();
 
-            ContactPerson newContact = new ContactPerson
+            return new ContactPerson
             {
                 FirstName = firstName,
                 LastName = lastName,
@@ -93,128 +227,10 @@
                 PhoneNumber = phoneNumber,
                 Email = email
             };
-
-            addressBook.AddContact(newContact);
-            Console.WriteLine("Contact added successfully!");
-        }
-
-        static void EditContact(AddressBook addressBook)
-        {
-            Console.WriteLine("\nEnter the contact's name you want to edit:");
-            Console.Write("Enter First Name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Enter Last Name: ");
-            string lastName = Console.ReadLine();
-
-            ContactPerson existingContact = addressBook.FindContact(firstName, lastName);
-
-            if (existingContact != null)
-            {
-                ContactPerson updatedContact = new ContactPerson
-                {
-                    FirstName = existingContact.FirstName,
-                    LastName = existingContact.LastName,
-                    Address = existingContact.Address,
-                    City = existingContact.City,
-                    State = existingContact.State,
-                    Zip = existingContact.Zip,
-                    PhoneNumber = existingContact.PhoneNumber,
-                    Email = existingContact.Email
-                };
-
-                Console.WriteLine("\nEditing contact details:");
-                Console.Write("Enter First Name: ");
-                updatedContact.FirstName = Console.ReadLine();
-                Console.Write("Enter Last Name: ");
-                updatedContact.LastName = Console.ReadLine();
-                Console.Write("Enter Address: ");
-                updatedContact.Address = Console.ReadLine();
-                Console.Write("Enter City: ");
-                updatedContact.City = Console.ReadLine();
-                Console.Write("Enter State: ");
-                updatedContact.State = Console.ReadLine();
-                Console.Write("Enter Zip: ");
-                updatedContact.Zip = Console.ReadLine();
-                Console.Write("Enter Phone Number: ");
-                updatedContact.PhoneNumber = Console.ReadLine();
-                Console.Write("Enter Email: ");
-                updatedContact.Email = Console.ReadLine();
-
-                if (addressBook.EditContact(firstName, lastName, updatedContact))
-                {
-                    Console.WriteLine("Contact updated successfully!");
-                }
-                else
-                {
-                    Console.WriteLine("Contact not found.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Contact not found.");
-            }
-        }
-
-        static void DeleteContact(AddressBook addressBook)
-        {
-            Console.WriteLine("\nEnter the contact's name you want to delete:");
-            Console.Write("Enter First Name: ");
-            string firstName = Console.ReadLine();
-            Console.Write("Enter Last Name: ");
-            string lastName = Console.ReadLine();
-
-            if (addressBook.DeleteContact(firstName, lastName))
-            {
-                Console.WriteLine("Contact deleted successfully!");
-            }
-            else
-            {
-                Console.WriteLine("Contact not found.");
-            }
-        }
-
-        static void AddMultipleContacts(AddressBook addressBook)
-        {
-            Console.WriteLine("\nAdding multiple contacts:");
-            while (true)
-            {
-                ContactPerson newContact = new ContactPerson();
-
-                Console.Write("Enter First Name (or 'exit' to stop adding): ");
-                string firstName = Console.ReadLine();
-                if (firstName.ToLower() == "exit")
-                {
-                    break;
-                }
-                newContact.FirstName = firstName;
-
-                Console.Write("Enter Last Name: ");
-                newContact.LastName = Console.ReadLine();
-
-                Console.Write("Enter Address: ");
-                newContact.Address = Console.ReadLine();
-
-                Console.Write("Enter City: ");
-                newContact.City = Console.ReadLine();
-
-                Console.Write("Enter State: ");
-                newContact.State = Console.ReadLine();
-
-                Console.Write("Enter Zip: ");
-                newContact.Zip = Console.ReadLine();
-
-                Console.Write("Enter Phone Number: ");
-                newContact.PhoneNumber = Console.ReadLine();
-
-                Console.Write("Enter Email: ");
-                newContact.Email = Console.ReadLine();
-
-                addressBook.AddContact(newContact);
-                Console.WriteLine("Contact added successfully!");
-            }
         }
     }
 }
+
 
 
 
