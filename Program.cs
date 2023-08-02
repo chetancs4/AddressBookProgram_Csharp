@@ -15,8 +15,9 @@
             {
                 Console.WriteLine("\nMenu:");
                 Console.WriteLine("1. Add Contact");
-                Console.WriteLine("2. Display All Contacts");
-                Console.WriteLine("3. Exit");
+                Console.WriteLine("2. Edit Contact");
+                Console.WriteLine("3. Display All Contacts");
+                Console.WriteLine("4. Exit");
 
                 int choice = GetUserChoice();
 
@@ -26,9 +27,12 @@
                         AddContact(addressBook);
                         break;
                     case 2:
-                        addressBook.DisplayContacts();
+                        EditContact(addressBook);
                         break;
                     case 3:
+                        addressBook.DisplayContacts();
+                        break;
+                    case 4:
                         isRunning = false;
                         break;
                     default:
@@ -84,6 +88,63 @@
 
             addressBook.AddContact(newContact);
             Console.WriteLine("Contact added successfully!");
+        }
+
+        static void EditContact(AddressBook addressBook)
+        {
+            Console.WriteLine("\nEnter the contact's name you want to edit:");
+            Console.Write("Enter First Name: ");
+            string firstName = Console.ReadLine();
+            Console.Write("Enter Last Name: ");
+            string lastName = Console.ReadLine();
+
+            ContactPerson existingContact = addressBook.FindContact(firstName, lastName);
+
+            if (existingContact != null)
+            {
+                ContactPerson updatedContact = new ContactPerson
+                {
+                    FirstName = existingContact.FirstName,
+                    LastName = existingContact.LastName,
+                    Address = existingContact.Address,
+                    City = existingContact.City,
+                    State = existingContact.State,
+                    Zip = existingContact.Zip,
+                    PhoneNumber = existingContact.PhoneNumber,
+                    Email = existingContact.Email
+                };
+
+                Console.WriteLine("\nEditing contact details:");
+                Console.Write("Enter First Name: ");
+                updatedContact.FirstName = Console.ReadLine();
+                Console.Write("Enter Last Name: ");
+                updatedContact.LastName = Console.ReadLine();
+                Console.Write("Enter Address: ");
+                updatedContact.Address = Console.ReadLine();
+                Console.Write("Enter City: ");
+                updatedContact.City = Console.ReadLine();
+                Console.Write("Enter State: ");
+                updatedContact.State = Console.ReadLine();
+                Console.Write("Enter Zip: ");
+                updatedContact.Zip = Console.ReadLine();
+                Console.Write("Enter Phone Number: ");
+                updatedContact.PhoneNumber = Console.ReadLine();
+                Console.Write("Enter Email: ");
+                updatedContact.Email = Console.ReadLine();
+
+                if (addressBook.EditContact(firstName, lastName, updatedContact))
+                {
+                    Console.WriteLine("Contact updated successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Contact not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Contact not found.");
+            }
         }
     }
 
