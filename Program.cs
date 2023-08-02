@@ -18,7 +18,8 @@
                 Console.WriteLine("2. Edit Contact");
                 Console.WriteLine("3. Delete Contact");
                 Console.WriteLine("4. Display All Contacts");
-                Console.WriteLine("5. Exit");
+                Console.WriteLine("5. Add Multiple Contacts");
+                Console.WriteLine("6. Exit");
 
                 int choice = GetUserChoice();
 
@@ -37,6 +38,9 @@
                         addressBook.DisplayContacts();
                         break;
                     case 5:
+                        AddMultipleContacts(addressBook);
+                        break;
+                    case 6:
                         isRunning = false;
                         break;
                     default:
@@ -166,6 +170,47 @@
             else
             {
                 Console.WriteLine("Contact not found.");
+            }
+        }
+
+        static void AddMultipleContacts(AddressBook addressBook)
+        {
+            Console.WriteLine("\nAdding multiple contacts:");
+            while (true)
+            {
+                ContactPerson newContact = new ContactPerson();
+
+                Console.Write("Enter First Name (or 'exit' to stop adding): ");
+                string firstName = Console.ReadLine();
+                if (firstName.ToLower() == "exit")
+                {
+                    break;
+                }
+                newContact.FirstName = firstName;
+
+                Console.Write("Enter Last Name: ");
+                newContact.LastName = Console.ReadLine();
+
+                Console.Write("Enter Address: ");
+                newContact.Address = Console.ReadLine();
+
+                Console.Write("Enter City: ");
+                newContact.City = Console.ReadLine();
+
+                Console.Write("Enter State: ");
+                newContact.State = Console.ReadLine();
+
+                Console.Write("Enter Zip: ");
+                newContact.Zip = Console.ReadLine();
+
+                Console.Write("Enter Phone Number: ");
+                newContact.PhoneNumber = Console.ReadLine();
+
+                Console.Write("Enter Email: ");
+                newContact.Email = Console.ReadLine();
+
+                addressBook.AddContact(newContact);
+                Console.WriteLine("Contact added successfully!");
             }
         }
     }
