@@ -16,8 +16,9 @@
                 Console.WriteLine("\nMenu:");
                 Console.WriteLine("1. Add Contact");
                 Console.WriteLine("2. Edit Contact");
-                Console.WriteLine("3. Display All Contacts");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("3. Delete Contact");
+                Console.WriteLine("4. Display All Contacts");
+                Console.WriteLine("5. Exit");
 
                 int choice = GetUserChoice();
 
@@ -30,9 +31,12 @@
                         EditContact(addressBook);
                         break;
                     case 3:
-                        addressBook.DisplayContacts();
+                        DeleteContact(addressBook);
                         break;
                     case 4:
+                        addressBook.DisplayContacts();
+                        break;
+                    case 5:
                         isRunning = false;
                         break;
                     default:
@@ -146,8 +150,25 @@
                 Console.WriteLine("Contact not found.");
             }
         }
-    }
 
+        static void DeleteContact(AddressBook addressBook)
+        {
+            Console.WriteLine("\nEnter the contact's name you want to delete:");
+            Console.Write("Enter First Name: ");
+            string firstName = Console.ReadLine();
+            Console.Write("Enter Last Name: ");
+            string lastName = Console.ReadLine();
+
+            if (addressBook.DeleteContact(firstName, lastName))
+            {
+                Console.WriteLine("Contact deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Contact not found.");
+            }
+        }
+    }
 }
 
 

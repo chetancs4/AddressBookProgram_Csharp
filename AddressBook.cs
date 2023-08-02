@@ -27,6 +27,17 @@
             return false;
         }
 
+        public bool DeleteContact(string firstName, string lastName)
+        {
+            ContactPerson contactToDelete = FindContact(firstName, lastName);
+            if (contactToDelete != null)
+            {
+                contacts.Remove(contactToDelete);
+                return true;
+            }
+            return false;
+        }
+
         public void DisplayContacts()
         {
             if (contacts.Count == 0)
@@ -48,7 +59,6 @@
             return contacts.Find(contact => contact.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) && contact.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
         }
     }
-
 }
 
 
